@@ -3,6 +3,7 @@ from .models import Achievement, Cat, User
 from .permissions import OwnerOrReadOnly
 from .serializers import AchievementSerializer, CatSerializer, UserSerializer
 from rest_framework.pagination import LimitOffsetPagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class CatViewSet(viewsets.ModelViewSet):
@@ -10,7 +11,10 @@ class CatViewSet(viewsets.ModelViewSet):
     serializer_class = CatSerializer
     permission_classes = (OwnerOrReadOnly,)
     throttle_scope = 'low_request'
-    pagination_class = LimitOffsetPagination
+    # pagination_class = LimitOffsetPagination
+    pagination_class = None
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['color', 'birth_year']
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
